@@ -35,19 +35,19 @@
           <a class="nav-item nav-link" href="">Padres</a>
         </nav>
 
-      <div class="col-md-12">
+      <div class="col-md-12" ng-controller="controladorclientes">
     	<hr>
       <form>
-      <div class="input-group mb-3" ng-controller="controladorclientes">
+      <div class="input-group mb-3">
           <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">Cliente</label>
           </div>
-          <select class="custom-select" id="cliente" name="cliente" >
+          <select class="custom-select" id="cliente" name="cliente" ng-model="data.model" >
             <option selected>Seleccione...</option>
-            <option ng-repeat="cli in clientes" value="{{cli.OCODIGO}}" ng-click="selectclient(cli)">{{cli.OCODIGO}}-{{cli.ONOMBRE}}</option>
+            <option ng-repeat="cli in clientes" value="{{cli.OCODIGO}}">{{cli.OCODIGO}}-{{cli.ONOMBRE}}</option>
           </select>
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit">Listar Movimientos</button>
+            <button class="btn btn-outline-secondary" type="button" ng-click="selectclient(data.model)">model={{data.model}}</button>
           </div>
       </div>
       </form>
@@ -57,26 +57,27 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Ciudad</th>
-                    <th>Padres</th>
-                    <th>Peso /Kg</th>
-                    <th>Estatura /Cm</th>
-                   <th colspan="2">Operaciones</th>
+                    <th>Codigo del Documento</th>
+                    <th>N°</th>
+                    <th>Fecha de creacion</th>
+                    <th>Fecha de vencimiento</th>
+                    <th>Valor</th>
+                    <th>Valor neto</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
                   </tr>
                 </thead>
-                <tr>
-                  <td>{{jug.nombres}}</td>
-                  <td>{{jug.apellidos}}</td>
-                  <td>{{jug.fechanaci}}</td>
-                  <td>{{jug.ciudad}}</td>
-                  <td>{{jug.padres}}</td>
-                  <td>{{jug.peso}}</td>
-                  <td>{{jug.estatura}}</td>
-                  <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModalAct" ><span class="glyphicon glyphicon-eye-open"></span>Actualizar</button></td>
-                  <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModaldelet" ><span class="glyphicon glyphicon-trash">Eliminar</span></button></td>
+                <tr ng-repeat="mov in movimiento">
+                  <td>{{mov.OCODCOMP}}</td>
+                  <td>{{mov.ONUMERO}}</td>
+                  <td>{{mov.OFECHA}}</td>
+                  <td>{{mov.OFECVENCE}}</td>
+                  <td>{{mov.OVALOR}}</td>
+                  <td>{{mov.ONETO}}</td>
+                  <td>{{mov.ONOMBRE}}</td>
+                  <td>{{mov.ODIRECCION}}</td>
+                  <td>{{mov.OTELEFONO}}</td>
                   
                 </tr>
               </table>

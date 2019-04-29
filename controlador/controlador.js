@@ -19,6 +19,14 @@ var datos = angular.module('tnsangular',[]);
 			console.log(cli);
 
 			$scope.clickclient = cli;
+
+
+			$http.get('https://tns.net.co:726/api/Tercero?empresa=VALIDACION&usuario=ADMIN&password=1&tnsapitoken=12345&&codcliente='+cli+'&codsucursal=00').then(function(datos){
+
+				console.log(datos.data.results.Documentos);
+
+				$scope.movimiento = datos.data.results.Documentos;
+			})
 		}
 	})
 
@@ -26,6 +34,8 @@ var datos = angular.module('tnsangular',[]);
 	datos.controller('controladormovimientos', function ($scope, $http) {
 		
 		$scope.importarmovimientos =function () {
+
+
 			
 			$http.get('../modelo/listarmov.php').then(function(datos){
 
@@ -43,5 +53,8 @@ var datos = angular.module('tnsangular',[]);
 
 			$scope.clickclient = cli;
 		}*/
+
+
 	})
+
 	
