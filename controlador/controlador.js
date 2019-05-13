@@ -1,5 +1,7 @@
 var datos = angular.module('tnsangular',[]);
 
+
+
 	datos.controller('controladorclientes', function ($scope, $http) {
 		
 		$scope.importarclientes =function () {
@@ -20,8 +22,9 @@ var datos = angular.module('tnsangular',[]);
 
 			$scope.clickclient = cli;
 
+			var uri='https://tns.net.co:726/api/Tercero?empresa=VALIDACION&usuario=ADMIN&password=1&tnsapitoken=12345&&codcliente='+cli+'&codsucursal=00';
 
-			$http.get('https://tns.net.co:726/api/Tercero?empresa=VALIDACION&usuario=ADMIN&password=1&tnsapitoken=12345&&codcliente='+cli+'&codsucursal=00').then(function(datos){
+			$http.get(uri).then(function(datos){1
 
 				console.log(datos.data.results.Documentos);
 
@@ -31,21 +34,20 @@ var datos = angular.module('tnsangular',[]);
 	})
 
 
-	datos.controller('controladormovimientos', function ($scope, $http) {
+	datos.controller('controladorpcliente', function ($scope, $http) {
 		
-		$scope.importarmovimientos =function () {
+		$scope.importarpcliente =function () {
 
 
 			
-			$http.get('../modelo/listarmov.php').then(function(datos){
+			$http.get('../modelo/clientes.php').then(function(datos){
 
-				$scope.movimiento = datos.data.results;
+				$scope.pcli = datos.data.results;
 
-				console.log(datos);
 			})
 		}
 
-		$scope.importarmovimientos();
+		$scope.importarpcliente();
 
 		/*$scope.selectclient = function(cli){
 
@@ -57,4 +59,30 @@ var datos = angular.module('tnsangular',[]);
 
 	})
 
+	datos.controller('controladorpvendedor', function ($scope, $http) {
+		
+		$scope.importarpvendedor =function () {
+
+
+			
+			$http.get('../modelo/clientes.php').then(function(datos){
+
+				$scope.pved = datos.data.results;
+
+				console.log(datos);
+
+			})
+		}
+
+		$scope.importarpvendedor();
+
+		/*$scope.selectclient = function(cli){
+
+			console.log(cli);
+
+			$scope.clickclient = cli;
+		}*/
+
+
+	})
 	
