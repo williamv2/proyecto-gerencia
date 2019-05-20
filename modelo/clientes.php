@@ -1,6 +1,6 @@
 <?php
 
-	$url="https://tns.net.co:726/api/Tercero?empresa=VALIDACION&usuario=ADMIN&password=1&tnsapitoken=12345&filtro=";
+	$url="https://tns.net.co:726/api/Tercero?empresa=1090485981&usuario=ADMIN&password=HUSXNX&tnsapitoken=12345&filtro=";
 
 	$apijson= array();
 

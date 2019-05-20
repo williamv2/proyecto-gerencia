@@ -12,8 +12,11 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
 
-    <script src="../controlador/controlador.js"></script>
+    <script src="../controlador/shim.js"></script>
+    <script src="../controlador/xlsx.core.min.js"></script>
+    <script src="../controlador/angular-js-xlsx.js"></script>
 
+    <script src="../controlador/controlador.js"></script>
 
 
     <title>Proyecto TNS Papeleria Mary!</title>
@@ -87,8 +90,8 @@
               </table>
 
               <!-- Modal -->
-        <div class="modal fade" id="myModalAct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+        <div class="modal fade" style="overflow-y: scroll;" id="myModalAct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Pedido</h5>
@@ -97,14 +100,14 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form method="POST" action="">
+                <form method="POST" action="" ng-controller="controladorpedido">
                   <div class="form-group">
-                        <input type="text" class="form-control" id="pcodpedido" name="pcodpedido" required="true" value="PV" style="display: none;">
+                        <input type="text" class="form-control" id="pcodpedido" name="pcodpedido" ng-init="pcodpedido='PV'" ng-model="pcodpedido" required="true" style="display:none;">
                         <label>Codigo Pedido:</label>
                         <input type="text" class="form-control" id="pnewcodpedido" name="pnewcodpedido" required="true" value="PV - PEDIDO DE VENTA" disabled="true">
                         <br>
                         <label>Prefijo Pedido:</label>
-                        <select class="form-control" name="prepedido" id="prepedido">
+                        <select class="form-control" name="prepedido" id="prepedido" ng-model="prepedido">
                           <option value="00">00-SIN PREFIJO</option>
                           <option value="01">01-ENERO</option>
                           <option value="02">02-FEBRERO</option>
@@ -121,48 +124,71 @@
                         </select>
                         <br>
                         <label>N° del Pedido</label>
-                        <input type="number" class="form-control" id="pnumero" name="pnumero" required="true" min="1">
+                        <input type="number" class="form-control" id="pnumero" name="pnumero" ng-model="pnumero" required="true" min="1">
                         <br>
                         <label>Fecha de Creacion:</label>
-                        <input type="date" class="form-control" id="pdatecre" name="pdatecre" required="true" min="2019-01-01">
+                        <input type="date" class="form-control" id="pdatecre" name="pdatecre" ng-model="pdatecre" required="true" min="2019-01-01">
                         <br>
                         <div>
                         <label>Cliente:</label>
-                        <select ng-controller="controladorpcliente" class="custom-select" id="pcliente" name="pcliente">
+                        <select ng-controller="controladorpcliente" class="custom-select" id="pcliente" name="pcliente" ng-model="pcliente">
                           <option ng-repeat="cli in pcli" value="{{cli.OCODIGO}}">{{cli.OCODIGO}}-{{cli.ONOMBRE}}</option>
                         </select>
                         </div>
                         <br>
                         <div>
                           <label>Vendendor:</label>
-                          <select ng-controller="controladorpvendedor" class="custom-select" id="pvendedor" name="pvendedor">
+                          <select ng-controller="controladorpvendedor" class="custom-select" id="pvendedor" name="pvendedor" ng-model="pvendedor">
                             <option ng-repeat="ved in pved" value="{{ved.OCODIGO}}">{{ved.OCODIGO}}-{{ved.ONOMBRE}}</option>
                           </select>
                         </div>
                         <br>
                         <label>Forma de Pago:</label>
                         <select class="form-control" name="ppago" id="ppago" ng-model="data.model">
-                          <option value="Contado">Contado</option>
-                          <option value="Credito">Credito</option>
+                          <option value="00">Contado</option>
+                          <option value="CX">Credito</option>
                         </select>
                         <br>
-                        <div class="form-control" ng-show="data.model=='Contado'">
-                          Banco: <select class="form-control" name="pcontado" id="pcontado">
+                        <div class="form-control" ng-show="data.model=='00'">
+                          Banco: <select class="form-control" name="pcontado" id="pcontado" ng-model="pcontado">
                             <option value="00">Banco Unico 00</option>
                           </select>
                         </div>
-                        <div class="form-control" ng-show="data.model=='Credito'">
-                          Plazo Dias: <input class="form-control" type="number" name="plazodias" id="plazodias" min="0">
+                        <div class="form-control" ng-show="data.model=='CX'">
+                          Plazo Dias: <input class="form-control" type="number" name="plazodias" id="plazodias" ng-model="plazodias" min="0">
 
-                          Fecha Vencimiento: <input class="form-control" type="date" name="pfechvence" id="pfechvence" min="2019-01-01">
+                          Fecha Vencimiento: <input class="form-control" type="date" name="pfechvence" id="pfechvence" ng-model="pfechvence" min="2019-01-01">
                         </div>
+
+                        <hr>
+                        <h4>Articulos</h4>
+                    <div>
+                        <div id="inputexcel" class="input-group">
+                            <div id="content_file" class="input-group-prepend" flex layout="row">
+                                <label flex><ng-md-icon icon="insert_drive_file"></ng-md-icon>{{name}}</label>
+                                <label id="inputbutton"  class="custom-file-upload">
+                                    <js-xls fd-input  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="hidden upload " onread="read" layout-align="center center" onerror="error">
+                                    </js-xls>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="tableContainer" class="table-responsive">
+                          <table class="table-striped">
+                              <tr ng-repeat="title in Elements |limitTo:1 ">
+                                  <th ng-repeat="(key,val) in title " ng-if="key != 'rowIndex'">{{key}}</th>
+                              </tr>
+                              <tr ng-repeat="elemnt in Elements" id="{{elemnt['rowIndex']}}">
+                                  <td ng-model="val" id="{{$index}}" ng-repeat="(key,val) in elemnt " ng-if="key != 'rowIndex'">{{val}}</td>
+                              </tr>
+                          </table>
                       </div>
-                        <br>
+                      </div>
+
                         
                   </div>
                   <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-success">Registar</button>
+                <button type="button" class="btn btn-success" ng-click="sendData()">Registar</button>
               </div>
                 </form>
               </div>
@@ -171,36 +197,36 @@
           </div>
         </div>
 
-                      <!-- Modal -->
-        <div class="modal fade" id="myModaldelet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <!-- Modal 
+        <div class="modal fade" id="myModalart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Desea Eliminar Jugador?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Articulo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <form method="POST" action="eliminarjug.php">
+                <form method="POST" action="">
                   <div class="form-group">
-                        <strong style="color: red;">
-                              Vas a eliminar a {{clickjug.nombres}} {{clickjug.apellidos}}.
-                        </strong>
-                        <input type="text" class="form-control" id="mnombre" name="mnombre" required="true" ng-model="clickjug.nombres" style="display:none; ">
-                        <input type="text" class="form-control" id="mmadre" name="mmadre" ng-model="clickjug.padres[0]" style="display:none; ">
-                        <input type="text" class="form-control" id="mpadre" name="mpadre" ng-model="clickjug.padres[1]" style="display:none; ">
+                        
+                        <label>Articulos</label>
+                        <select class="form-control" name="artbodega" id="artbodega">
+                          <option value="00"> Bodega Principal</option>
+                        </select>
+                        
                   </div>
                   <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-success">Agregar</button>
               </div>
                 </form>
               </div>
               
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
 
@@ -215,41 +241,89 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form method="POST" action="registrarjug.php">
+                <form ng-controller="controladorrecibo" method="POST">
                   <div class="form-group">
-                        <label>Nombres:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required="true">
-                        <label>Apellidos:</label>
-                        <input type="text" class="form-control" id="apellido" name="apellido" required="true" >
-                        <label>Fecha de Nacimiento:</label>
-                        <input type="date" class="form-control" id="fnaci" name="fnaci" required="true">
-                        <label>N° de celular:</label>
-                        <input type="number" class="form-control" id="cel" name="cel" min="0" required="true">
-                        <label>Ciudad:</label>
-                        <input type="text" class="form-control" id="city" name="city" required="true">
-                        <label>Pais:</label>
-                        <input type="text" class="form-control" id="pais" name="pais" required="true">
+                        <input type="text" class="form-control" id="rcodrecibo" name="rcodrecibo" required="true" ng-init="rcodrecibo='RC'" value="RC" ng-model="rcodrecibo" style="display: none;">
+                        <label>Codigo Recibo:</label>
+                        <input type="text" class="form-control" id="rnewcodrecibo" name="rnewcodrecibo" required="true" value="RC - RECIBO DE CAJA" disabled="true">
                         <br>
-                        <label>Padres:</label>
-                        <div class="row">
-                          <div class="col">
-                            <input type="text" class="form-control input-group" id="madre" name="madre" placeholder="Madre">
-                          </div>
-                          <div class="col">
-                            <input type="text" class="form-control input-group" id="padre" name="padre" placeholder="Padre">
-                          </div>
+                        <label>Prefijo Recibo:</label>
+                        <select class="form-control" name="rprerecibo" id="rprerecibo" ng-model="rprerecibo">
+                          <option value="00">00-SIN PREFIJO</option>
+                          <option value="01">01-ENERO</option>
+                          <option value="02">02-FEBRERO</option>
+                          <option value="03">03-MARZO</option>
+                          <option value="04">04-ABRIL</option>
+                          <option value="05">05-MAYO</option>
+                          <option value="06">06-JUNIO</option>
+                          <option value="07">07-JULIO</option>
+                          <option value="08">08-AGOSTO</option>
+                          <option value="09">09-SEPTIEMBRE</option>
+                          <option value="10">10-OCTUBRE</option>
+                          <option value="11">11-NOVIEMBRE</option>
+                          <option value="12">12-DICIEMBRE</option>
+                        </select>
+                        <br>
+                        <label>Fecha de Creacion:</label>
+                        <input type="date" class="form-control" id="rdatecre" name="rdatecre" ng-model="rdatecre" required="true" min="2019-01-01">
+                        <br>
+                        <div ng-controller="controladorpcliente">
+                        <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Cliente</label>
                         </div>
+                        <select class="custom-select" id="rcliente" name="rcliente" ng-model="data.model" >
+                          <option selected value="">Seleccione...</option>
+                          <option ng-repeat="cli in pcli" value="{{cli.OCODIGO}}">{{cli.OCODIGO}}-{{cli.ONOMBRE}}</option>
+                        </select>
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-info" type="button" ng-click="selectclient(data.model)">CARGAR</button>
+                        
+                        </div>
+
+                        </div>
+                        <label>Documentos</label>
+                        <select class="custom-select" id="rdocumento" name="rdocumento" ng-model="rdocumento">
+                          <option ng-repeat="mov in movimiento" value="{{mov.OCODCOMP}},{{mov.ONUMERO}},{{mov.ONETO}},{{mov.OCODTERC}}">{{mov.OCODCOMP}}-{{mov.ONUMERO}}, Valor: {{mov.ONETO}}, {{mov.ONOMBRE}}</option>
+                        </select>
+                        <div>
+                          <br>
+                          <label>Cobrador:</label>
+                          <select ng-controller="controladorpvendedor" class="custom-select" id="rvendedor" name="rvendedor" ng-model="rvendedor">
+                            <option ng-repeat="ved in pved" value="{{ved.OCODIGO}}">{{ved.OCODIGO}}-{{ved.ONOMBRE}}</option>
+                          </select>
+                        </div>
+                        <hr>
+                        <label>Forma de Pago</label>
+                        <select class="custom-select" id="rfpago" name="rfpago">
+                          <option value="EF">EFECTIVO</option>
+                          <option value="CH">CHEQUE</option>
+                          <option value="TC">TARJETA DE CREDITO</option>
+                        </select>
                         <br>
-                        <label>Fecha de ingreso:</label>
-                        <input type="date" class="form-control" id="fing" name="fing" required="true">
-                        <label>Peso:</label>
-                        <input type="number" class="form-control" id="peso" name="peso" placeholder="Kg" min="30" max="150" required="true">
-                        <label>Estatura:</label>
-                        <input type="number" class="form-control" id="estatura" name="estatura" placeholder="cm" min="130" max="220" required="true">
+                        <br>
+                        <label>Banco</label>
+                        <select class="custom-select" id="bfpago" name="bfpago">
+                          <option value="00">Banco Unico</option>
+                          <option value="01">Bancolombia</option>
+                        </select>
+                        <br>
+                        <br>
+                        <label>Valor</label>
+                        <input class="form-control" type="number" name="vfpago" id="vfpago" min="0">
+                        <br>
+                        <div>
+                        <label>Tercero:</label>
+                        <select ng-controller="controladorpcliente" class="custom-select" id="tfpago" name="tfpago">
+                          <option ng-repeat="cli in pcli" value="{{cli.OCODIGO}}">{{cli.OCODIGO}}-{{cli.ONOMBRE}}</option>
+                        </select>
+                        </div>
+
+
                   </div>
                   <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success">Agregar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" ng-click="sendDataRecibo()">Registrar</button>
               </div>
                 </form>
               </div>
