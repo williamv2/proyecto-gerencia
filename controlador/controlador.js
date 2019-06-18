@@ -147,6 +147,8 @@ var datos = angular.module('tnsangular',['ng', 'angular-js-xlsx']);
         		newdate = $filter('date')($scope.pdatecre,'dd/MM/yyyy');
         		var newdatecredito = $filter('date')($scope.pfechvence,'dd/MM/yyyy');
 
+        		var numero = $scope.pnumero;
+
         		var articulo;
         		for (var i = 0; i < $scope.articulo.length; i++) {
         			
@@ -155,7 +157,7 @@ var datos = angular.module('tnsangular',['ng', 'angular-js-xlsx']);
         			}
         		}
 
-				var data = JSON.stringify({OCODCOMP:$scope.pcodpedido,OCODPREFIJO:$scope.prepedido,ONUMERO:$scope.pnumero,OFECHA:newdate,OCODCLIENTE:cliente,OCODVENDEDOR:vendedor,OCODFORMAPAGO:$scope.data.model,OCODBANCO:$scope.pcontado,OFECHAVENCE:newdatecredito,OPLAZODIAS:$scope.plazodias,
+				var data = JSON.stringify({OCODCOMP:$scope.pcodpedido,OCODPREFIJO:$scope.prepedido,ONUMERO:numero.toString(),OFECHA:newdate,OPERIODO:$scope.prepedido,OCODCLIENTE:cliente,OCODVENDEDOR:vendedor,OCODFORMAPAGO:$scope.data.model,OCODBANCO:$scope.pcontado,OFECHAVENCE:newdatecredito,OPLAZODIAS:$scope.plazodias,
 					OITEMSPEDIDO:$scope.articulo});
 				
 
@@ -172,6 +174,18 @@ var datos = angular.module('tnsangular',['ng', 'angular-js-xlsx']);
 				var uri = "https://tns.net.co:726/api/Pedido?empresa=1090485981&usuario=ADMIN&password=HUSXNX&tnsapitoken=12345&codsucursal=00"
 
 				$http.get(url).then(function(response){
+
+					if (response.data.status=="OK") {
+
+						alert(response.data.results.response);
+						window.location='../vista/index.php';
+						console.log(response.data);
+
+
+					}
+					else{
+						console.log(response.data);
+					}
 
 					console.log(response.data);
 				})
@@ -206,13 +220,14 @@ var datos = angular.module('tnsangular',['ng', 'angular-js-xlsx']);
 			var data2 = JSON.stringify({OCODCOMP:$scope.rcodrecibo,
 				OCODPREFIJO:$scope.rprerecibo,
 				OFECHA:datecre,
+				OPERIODO:"01",
 				OCODCLIENTE:cliente,
 				OCODCOBRADOR:cobrador,
-				OITEMSRECIBO:[{ONUMDOCUM:documento2[1],
-					OITEM:001,
-					OCODCONCEPTO:02,
-					OCODTERCERO:documento2[3],
-					OVALOR:documento2[2]}],
+				OITEMSRECIBO:[{ONUMDOCUM:documento2[0]+documento2[1]+documento2[2],
+					OITEM:"001",
+					OCODCONCEPTO:"02",
+					OCODTERCERO:documento2[4],
+					OVALOR:documento2[3]}],
 				OITEMSRECIBOFP:[{OFORMAPAGO:fpago,
 					OCODBANCO:bfpago,
 					OVALOR:vfpago,
@@ -225,7 +240,19 @@ var datos = angular.module('tnsangular',['ng', 'angular-js-xlsx']);
 
 			$http.get(url).then(function(response){
 
-					console.log(response.data);
+					if (response.data.status=="OK") {
+
+						alert(response.data.results.response);
+						
+						console.log(response.data);
+
+
+					}
+					else{
+						console.log(response.data);
+					}
+
+					
 				})
 
 			

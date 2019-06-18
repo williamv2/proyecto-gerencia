@@ -8,6 +8,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <link rel="icon" type="image/ico" href="./img/stationery_47186.ico" />
+
+
     <script src="https://use.fontawesome.com/fe732c725a.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
@@ -241,7 +244,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form ng-controller="controladorrecibo" method="POST">
+                <form ng-controller="controladorrecibo" method="POST" action="../modelo/registrorecibo.php">
                   <div class="form-group">
                         <input type="text" class="form-control" id="rcodrecibo" name="rcodrecibo" required="true" ng-init="rcodrecibo='RC'" value="RC" ng-model="rcodrecibo" style="display: none;">
                         <label>Codigo Recibo:</label>
@@ -284,7 +287,7 @@
                         </div>
                         <label>Documentos</label>
                         <select class="custom-select" id="rdocumento" name="rdocumento" ng-model="rdocumento">
-                          <option ng-repeat="mov in movimiento" value="{{mov.OCODCOMP}},{{mov.ONUMERO}},{{mov.ONETO}},{{mov.OCODTERC}}">{{mov.OCODCOMP}}-{{mov.ONUMERO}}, Valor: {{mov.ONETO}}, {{mov.ONOMBRE}}</option>
+                          <option ng-repeat="mov in movimiento" value="{{mov.OCODCOMP}},{{mov.OCODPREFIJO}},{{mov.ONUMERO}},{{mov.ONETO}},{{mov.OCODTERC}}">{{mov.OCODCOMP}}-{{mov.ONUMERO}}, Valor: {{mov.ONETO}}, {{mov.ONOMBRE}}</option>
                         </select>
                         <div>
                           <br>
